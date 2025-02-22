@@ -1,0 +1,117 @@
+/* Center the page and apply gradient background */
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(to right, #4b0d0d, #1c2b4f);
+  font-family: Arial, sans-serif;
+}
+
+/* Signup form container */
+.signup-container {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 450px;
+  height: 105vh;
+}
+.signup-container h1{
+  font-size: 50px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #093588;
+  height:5vh;
+
+}
+/* Signup title */
+.signup-container h2 {
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #232121;
+}
+
+/* Form labels */
+.signup-container label {
+  font-size: 16px;
+  font-weight: bold;
+  display: block;
+  text-align: left;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+/* Input fields */
+.signup-container input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: #2210eb;
+}
+
+/* Input focus effect */
+.signup-container input:focus {
+  border-color: #4caf50;
+}
+
+/* Signup button */
+.signup-container button {
+  width: 40%;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.3s ease-in-out;
+}
+
+/* Button hover effect */
+.signup-container button:hover {
+  background-color: #388e3c;
+}
+
+/* Signup link */
+.signup-link {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.signup-link a {
+  color: #2210eb;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Signup link hover effect */
+.signup-link a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 500px) {
+  .signup-container {
+    width: 90%;
+  }
+}
+.message {
+  font-size: 16px;
+  font-weight: bold;
+  color: green; /* Green color for success */
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  margin-top: 10px;
+  border: 1px solid green;
+}
