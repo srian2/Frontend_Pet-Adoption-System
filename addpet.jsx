@@ -102,19 +102,21 @@ const AddPet = () => {
   };
 
   return (
-    <div className="container">
+    <div className="profile-page">
+      {/* Sidebar */}
       <div className="sidebar">
         <h2>🐾 AdoptMe</h2>
         <ul>
           <li><a href="/dashboard">Home</a></li>
-          <li><a href="/add-pet" className="active">Add Pet</a></li>
+          <li><a href="/addpet"  className="active">Add Pet</a></li>
           <li><a href="/adoption">Adopt</a></li>
-          <li><a href="/Profile">Profile</a></li>
+          <li><a href="/profile">Profile</a></li>
           <li><a href="/login">Logout</a></li>
         </ul>
       </div>
 
-      <div className="content">
+      {/* Main Content */}
+      <div className="profile-container">
         <div className="add-pet-form">
           <h2>Add a Pet</h2>
           <form onSubmit={handleSubmit} encType="multipart/form-data">
