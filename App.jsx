@@ -5,26 +5,28 @@ import Login from "./components/login";
 import Dashboard from "./components/dashboard";
 import AddPet from "./components/addpet";
 import Adopt from "./components/adoption";
-import Settings from "./components/settings";
-import Navbar from "./components/Navbar";
+import Profile from "./components/Profile";
+import AdminDashboard from "./components/AdminDashboard";
+
 
 const AppLayout = () => {
   const location = useLocation(); // Get the current URL path
 
   // Hide Navbar on login and signup pages
-  const hideNavbar = location.pathname === "/login" || location.pathname === "/signup" || location.pathname === "/";
+  // const hideNavbar = location.pathname === "/login" || location.pathname === "/signup" || location.pathname === "/";
 
   return (
     <>
-      {!hideNavbar && <Navbar />} {/* Render Navbar only when NOT on login or signup */}
       <Routes>
         <Route path="/" element={<Login />} />
+
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/addpet" element={<AddPet />} />
         <Route path="/adoption" element={<Adopt />} />
-        <Route path="/settings" element={<Settings/>} />
+        <Route path="/Profile" element={<Profile/>} />
+        <Route path="/Admindashboard" element={<AdminDashboard />} />
       </Routes>
     </>
   );
