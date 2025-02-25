@@ -1,127 +1,213 @@
-/* Center the form on the page */
-.main-container {
+/* Full-page layout */
+.adopt-page {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  background: #eef5ff; /* Light blue background */
+  overflow: hidden;
+  background-image: url('ab.jbg');
+}
+
+/* Sidebar (Left Section) */
+.sidebar {
+  width: 250px; /* Fixed width */
+  background: #4466b0; /* Dark blue */
+  color: rgb(14, 13, 13);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  position:fixed;
+  left: 0;
+  top: 0;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Sidebar styling */
+.sidebar h2 {
+  text-align: center;
+  color: rgb(15, 14, 14);
+  font-size: 30px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+
+.sidebar ul li {
+  margin: 10px 0;
+}
+
+.sidebar ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  display: block;
+  padding: 10px;
+  text-align: center;
+  transition: 0.3s;
+  width: 100%;
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+  background: white;
+  color: #3b5998;
+  border-radius: 5px;
+}
+
+/* Main Section (Right Section) */
+.main-section {
+  margin-left: 250px;
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background: white;
-  padding: 20px;
+  background: rgba(0, 0, 0, 0.1); /* Light overlay effect */
+  height: 100vh;
+  width: calc(100% - 250px);
 }
 
-/* Form container */
+/* Popup-style Form Container */
 .adoption-form-container {
-  background: white;
+  background: white; /* White background */
   padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
-  width: 90%; /* Matches navbar width */
-  max-width: 800px; /* Prevents excessive stretching */
-  transition: 0.3s ease-in-out;
+  border-radius: 10px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);
+  width: 40%; /* Smaller form */
+  max-width: 500px;
+  height: auto;
+  max-height: 700px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position:relative;
+  transition: all 0.3s ease-in-out;
 }
 
-/* Form title */
-h2 {
-  text-align: center;
-  color: #222;
-  margin-bottom: 20px;
-  font-weight: bold;
-  font-size: 26px;
-}
-
-/* Label styles */
-label {
-  font-weight: bold;
-  font-size: 16px;
+/* Form Labels */
+.input-group label {
   display: block;
-  margin-bottom: 8px;
-  color: #444;
-}
-
-/* Input and textarea styling */
-input,
-textarea {
-  width: 100%;
-  padding: 14px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  font-weight: bold;
   font-size: 16px;
-  margin-bottom: 15px;
-  transition: 0.3s ease-in-out;
-  background: #f9f9f9;
+  margin-bottom: 5px;
+  color: black; /* Black label text */
+}
+
+/* Reduce Input Field Size */
+.input-group input,
+.input-group textarea {
+  width: 100%;
+  padding: 8px; /* Reduce padding */
+  font-size: 14px; /* Smaller text */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #f0f0f0; /* Light grey input fields */
   color: #333;
+  height: 35px; /* Reduce height */
 }
 
-/* Input focus effect */
-input:focus,
-textarea:focus {
-  border-color: #6a00d6; /* Matches navbar color */
+/* Reduce Textarea Height */
+.input-group textarea {
+  height: 70px;
+  resize: none;
+}
+
+/* Input Focus Effect */
+.input-group input:focus,
+.input-group textarea:focus {
+  border-color: #3b5998;
   outline: none;
-  box-shadow: 0 0 8px rgba(106, 0, 214, 0.3);
-  background: #fff;
+  box-shadow: 0px 0px 5px rgba(59, 89, 152, 0.5);
 }
 
-/* Button styling */
+/* Submit Button */
 .submit-button {
-  background: #6a00d6; /* Matches navbar */
+  width: 100%;
+  padding: 12px;
+  background: #3b5998;
   color: white;
   border: none;
-  padding: 14px;
-  border-radius: 6px;
-  font-size: 18px;
+  border-radius: 5px;
+  font-size: 20px;
   cursor: pointer;
-  width: 100%;
-  font-weight: bold;
-  transition: 0.3s ease-in-out;
+  transition: 0.3s;
 }
 
 .submit-button:hover {
-  background: #5300a3;
-  box-shadow: 0px 4px 8px rgba(106, 0, 214, 0.3);
+  background: #2e4372;
 }
 
 /* Success & Error Messages */
-.success-message,
-.error-message {
-  text-align: center;
-  padding: 14px;
-  border-radius: 6px;
-  font-size: 15px;
-  font-weight: bold;
-  margin-bottom: 12px;
-}
-
 .success-message {
-  background: #d4edda;
-  color: #155724;
+  color: green;
+  font-weight: bold;
+  font-size: 18px;
 }
 
 .error-message {
-  background: #f8d7da;
-  color: #721c24;
+  color: red;
+  font-weight: bold;
+  font-size: 18px;
+}
+.adoption-form-container h2 {
+  text-align: center; /* Center the heading */
+  font-size: 28px; /* Increase font size */
+  font-weight: bold; /* Make it bold */
+  color: #3b5998; /* Match sidebar color */
+  margin-bottom: 20px; /* Add spacing below */
+  text-transform: uppercase; /* Make it all caps */
+  letter-spacing: 1px; /* Add some spacing between letters */
 }
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
+
+/* Update Input Field Background Color */
+.input-group input,
+.input-group textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #f5f8ff; /* Light blue background */
+  color: #333; /* Dark text for contrast */
+}
+
+/* Optional: Change Input Focus Color */
+.input-group input:focus,
+.input-group textarea:focus {
+  border-color: #3b5998;
+  outline: none;
+  box-shadow: 0px 0px 5px rgba(59, 89, 152, 0.5);
+}
+
+
+
+/* Medium screens (tablets) */
+@media (max-width: 1024px) {
   .adoption-form-container {
-    width: 100%;
-    padding: 20px;
+    width: 50%; /* Slightly wider for better visibility */
   }
+}
 
-  h2 {
-    font-size: 24px;
+/* Small screens (mobile) */
+@media (max-width: 768px) {
+  .adoption-form-container {
+    width: 80%; /* Wider for small screens */
+    max-width: 90%; /* Prevents it from being too narrow */
+    padding: 20px; /* Reduce padding */
   }
+}
 
-  label {
-    font-size: 15px;
-  }
-
-  input,
-  textarea {
-    font-size: 14px;
-    padding: 12px;
-  }
-
-  .submit-button {
-    font-size: 17px;
+/* Extra small screens (very small devices) */
+@media (max-width: 480px) {
+  .adoption-form-container {
+    width: 95%; /* Almost full width */
+    padding: 15px; /* Reduce padding further */
   }
 }
