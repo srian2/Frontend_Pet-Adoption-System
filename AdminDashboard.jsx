@@ -13,10 +13,9 @@ const AdminDashboard = () => {
         age: "",
         breed: "",
         description: "",
-        imageUrl: ""
+        image: null
     });
 
-    // Fetch data from API
     useEffect(() => {
         fetch("http://localhost:3000/api/auth/getAllUsers")
             .then(response => response.json())
@@ -34,7 +33,6 @@ const AdminDashboard = () => {
             .catch(error => console.error("Error fetching adoptions:", error));
     }, []);
 
-    // Handle status change in adoption requests
     const handleStatusChange = (adoptionId, newStatus) => {
         fetch(`http://localhost:3000/api/adoptions/updateStatus/${adoptionId}`, {
             method: "PUT",
@@ -42,7 +40,7 @@ const AdminDashboard = () => {
             body: JSON.stringify({ status: newStatus }),
         })
         .then(response => response.json())
-        .then(data => {
+        .then(() => {
             setAdoptions(prevAdoptions =>
                 prevAdoptions.map(adoption =>
                     adoption.id === adoptionId ? { ...adoption, status: newStatus } : adoption
@@ -52,24 +50,30 @@ const AdminDashboard = () => {
         .catch(error => console.error("Error updating status:", error));
     };
 
-    // Handle input change for adding a pet
     const handleInputChange = (e) => {
-        setNewPet({ ...newPet, [e.target.name]: e.target.value });
+        if (e.target.name === "image") {
+            setNewPet({ ...newPet, image: e.target.files[0] });
+        } else {
+            setNewPet({ ...newPet, [e.target.name]: e.target.value });
+        }
     };
 
-    // Handle form submission for adding a pet
     const handleAddPet = (e) => {
         e.preventDefault();
-
+        const formData = new FormData();
+        
+        for (const key in newPet) {
+            formData.append(key, newPet[key]);
+        }
+        
         fetch("http://localhost:3000/api/pets/", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(newPet),
+            body: formData,
         })
         .then(response => response.json())
         .then(data => {
             setPets([...pets, data]);
-            setNewPet({ name: "", species: "", age: "", breed: "", description: "", imageUrl: "" });
+            setNewPet({ name: "", species: "", age: "", breed: "", description: "", image: null });
             setIsPopupOpen(false);
         })
         .catch(error => console.error("Error adding pet:", error));
@@ -78,15 +82,13 @@ const AdminDashboard = () => {
     return (
         <div className="container">
             <h1>Admin Dashboard</h1>
-
-            {/* Users Section */}
+            
             <section className="section">
                 <h2>Users</h2>
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th><th>Full Name</th><th>Email</th>
-                            <th>DOB</th><th>Photo</th><th>Address</th><th>Phone Number</th>
+                            <th>ID</th><th>Full Name</th><th>Email</th><th>DOB</th><th>Photo</th><th>Address</th><th>Phone</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -109,14 +111,9 @@ const AdminDashboard = () => {
                 </table>
             </section>
 
-            {/* Pets Section */}
             <section className="section">
                 <h2>Pets</h2>
-
-                {/* Add Pet Button */}
                 <button className="add-pet-btn" onClick={() => setIsPopupOpen(true)}>Add Pet</button>
-
-                {/* Add Pet Popup */}
                 {isPopupOpen && (
                     <div className="popup">
                         <div className="popup-content">
@@ -127,20 +124,17 @@ const AdminDashboard = () => {
                                 <input type="number" name="age" value={newPet.age} onChange={handleInputChange} placeholder="Age" required />
                                 <input type="text" name="breed" value={newPet.breed} onChange={handleInputChange} placeholder="Breed" required />
                                 <input type="text" name="description" value={newPet.description} onChange={handleInputChange} placeholder="Description" required />
-                                <input type="text" name="imageUrl" value={newPet.imageUrl} onChange={handleInputChange} placeholder="Image URL" required />
+                                <input type="file" name="image" onChange={handleInputChange} accept="image/*" required />
                                 <button type="submit">Add Pet</button>
                                 <button type="button" className="close-btn" onClick={() => setIsPopupOpen(false)}>Cancel</button>
                             </form>
                         </div>
                     </div>
                 )}
-
-                {/* Pets Table */}
                 <table>
                     <thead>
                         <tr>
-                            <th>Name</th><th>Species</th><th>Age</th><th>Breed</th>
-                            <th>Description</th><th>Image</th>
+                            <th>Name</th><th>Species</th><th>Age</th><th>Breed</th><th>Description</th><th>Image</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -161,8 +155,6 @@ const AdminDashboard = () => {
                     </tbody>
                 </table>
             </section>
-
-            {/* Adoption Requests Section */}
             <section className="section">
                 <h2>Adoption Requests</h2>
                 <table>
