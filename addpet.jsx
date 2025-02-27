@@ -102,6 +102,7 @@ const AddPet = () => {
   };
 
   return (
+   
     <div className="profile-page">
       {/* Sidebar */}
       <div className="sidebar">
@@ -115,7 +116,7 @@ const AddPet = () => {
         </ul>
       </div>
 
-      {/* Main Content */}
+      {/* Main Content */} <div className="Profile-section">
       <div className="profile-container">
         <div className="add-pet-form">
           <h2>Add a Pet</h2>
@@ -136,7 +137,7 @@ const AddPet = () => {
             <textarea name="description" value={formData.description} onChange={handleChange} required />
 
             <label>Choose Photo:</label>
-            <input type="file" accept="image/*" onChange={handleFileChange} />
+            <input type="File" accept="image/*" onChange={handleFileChange} />
 
             <div className="button-group">
               <button type="submit" className="submit-btn">Add Pet</button>
@@ -144,7 +145,9 @@ const AddPet = () => {
             </div>
           </form>
         </div>
+        </div>
       </div>
+  
     </div>
   );
 };
