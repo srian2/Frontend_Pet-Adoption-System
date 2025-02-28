@@ -5,6 +5,8 @@
   width: 100vw;
   overflow: hidden;
   background: #f5f5f5;
+  background-image: url(/backkk.jpg);
+  background-size:cover;
 }
 
 /* Sidebar */
@@ -67,6 +69,7 @@
   background: #f5f5f5;
   height: 100vh; /* Full height */
   width: calc(100% - 250px);
+  /* background-image: url(/backkk.jpg); */
 }
 .add-pet-form input {
   width: 90%;
@@ -83,12 +86,6 @@
   box-shadow: 0px 4px 10px rgba(0, 123, 255, 0.2);
 }
 
-/* .Profile-section{
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-} */
 
 /* Add Pet Form */
 .add-pet-form {

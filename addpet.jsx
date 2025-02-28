@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import "./addPet.css"; // Ensure correct path
 
 const API_URL = "http://localhost:3000/api/pets";
-
 const AddPet = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -12,30 +11,24 @@ const AddPet = () => {
     breed: "",
     description: "",
   });
-
   const [file, setFile] = useState(null);
   const [pets, setPets] = useState([]);
   const navigate = useNavigate();
-
   useEffect(() => {
     fetch(API_URL)
       .then((res) => res.json())
       .then((data) => setPets(data))
       .catch((error) => console.error("Error fetching pets:", error));
   }, []);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const existingPet = pets.find(
         (pet) =>
@@ -45,7 +38,6 @@ const AddPet = () => {
           pet.breed === formData.breed &&
           pet.description === formData.description
       );
-
       const formDataToSend = new FormData();
       Object.keys(formData).forEach((key) => {
         formDataToSend.append(key, formData[key]);
@@ -102,7 +94,6 @@ const AddPet = () => {
   };
 
   return (
-   
     <div className="profile-page">
       {/* Sidebar */}
       <div className="sidebar">
@@ -115,9 +106,6 @@ const AddPet = () => {
           <li><a href="/login">Logout</a></li>
         </ul>
       </div>
-
-      {/* Main Content */} <div className="Profile-section">
-      <div className="profile-container">
         <div className="add-pet-form">
           <h2>Add a Pet</h2>
           <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -146,10 +134,6 @@ const AddPet = () => {
           </form>
         </div>
         </div>
-      </div>
-  
-    </div>
-  );
-};
 
+  );};
 export default AddPet;
