@@ -10,10 +10,9 @@ import AdminDashboard from "./components/AdminDashboard";
 
 
 const AppLayout = () => {
-  const location = useLocation(); // Get the current URL path
+  const location = useLocation(); 
 
-  // Hide Navbar on login and signup pages
-  // const hideNavbar = location.pathname === "/login" || location.pathname === "/signup" || location.pathname === "/";
+
 
   return (
     <>
