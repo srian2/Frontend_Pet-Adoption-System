@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
@@ -6,7 +7,6 @@ const AdminDashboard = () => {
     const [pets, setPets] = useState([]);
     const [adoptions, setAdoptions] = useState([]);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
-    
     const [newPet, setNewPet] = useState({
         name: "",
         species: "",
@@ -15,6 +15,8 @@ const AdminDashboard = () => {
         description: "",
         image: null
     });
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetch("http://localhost:3000/api/auth/getAllUsers")
@@ -33,55 +35,17 @@ const AdminDashboard = () => {
             .catch(error => console.error("Error fetching adoptions:", error));
     }, []);
 
-    const handleStatusChange = (adoptionId, newStatus) => {
-        fetch(`http://localhost:3000/api/adoptions/updateStatus/${adoptionId}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ status: newStatus }),
-        })
-        .then(response => response.json())
-        .then(() => {
-            setAdoptions(prevAdoptions =>
-                prevAdoptions.map(adoption =>
-                    adoption.id === adoptionId ? { ...adoption, status: newStatus } : adoption
-                )
-            );
-        })
-        .catch(error => console.error("Error updating status:", error));
-    };
-
-    const handleInputChange = (e) => {
-        if (e.target.name === "image") {
-            setNewPet({ ...newPet, image: e.target.files[0] });
-        } else {
-            setNewPet({ ...newPet, [e.target.name]: e.target.value });
-        }
-    };
-
-    const handleAddPet = (e) => {
-        e.preventDefault();
-        const formData = new FormData();
-        
-        for (const key in newPet) {
-            formData.append(key, newPet[key]);
-        }
-        
-        fetch("http://localhost:3000/api/pets/", {
-            method: "POST",
-            body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-            setPets([...pets, data]);
-            setNewPet({ name: "", species: "", age: "", breed: "", description: "", image: null });
-            setIsPopupOpen(false);
-        })
-        .catch(error => console.error("Error adding pet:", error));
+    const handleLogout = () => {
+        localStorage.removeItem("token");  // Remove auth token
+        navigate("/login"); // Redirect to login page
     };
 
     return (
         <div className="container">
-            <h1>Admin Dashboard</h1>
+            <div className="dashboard-header">
+                <h1>Admin Dashboard</h1>
+                <button className="logout-btn" onClick={handleLogout}>Logout</button>
+            </div>
             
             <section className="section">
                 <h2>Users</h2>
@@ -114,23 +78,25 @@ const AdminDashboard = () => {
             <section className="section">
                 <h2>Pets</h2>
                 <button className="add-pet-btn" onClick={() => setIsPopupOpen(true)}>Add Pet</button>
+                
                 {isPopupOpen && (
                     <div className="popup">
                         <div className="popup-content">
                             <h2>Add a New Pet</h2>
-                            <form onSubmit={handleAddPet} className="add-pet-form">
-                                <input type="text" name="name" value={newPet.name} onChange={handleInputChange} placeholder="Pet Name" required />
-                                <input type="text" name="species" value={newPet.species} onChange={handleInputChange} placeholder="Species" required />
-                                <input type="number" name="age" value={newPet.age} onChange={handleInputChange} placeholder="Age" required />
-                                <input type="text" name="breed" value={newPet.breed} onChange={handleInputChange} placeholder="Breed" required />
-                                <input type="text" name="description" value={newPet.description} onChange={handleInputChange} placeholder="Description" required />
-                                <input type="file" name="image" onChange={handleInputChange} accept="image/*" required />
+                            <form>
+                                <input type="text" name="name" placeholder="Pet Name" required />
+                                <input type="text" name="species" placeholder="Species" required />
+                                <input type="number" name="age" placeholder="Age" required />
+                                <input type="text" name="breed" placeholder="Breed" required />
+                                <input type="text" name="description" placeholder="Description" required />
+                                <input type="file" name="image" accept="image/*" required />
                                 <button type="submit">Add Pet</button>
                                 <button type="button" className="close-btn" onClick={() => setIsPopupOpen(false)}>Cancel</button>
                             </form>
                         </div>
                     </div>
                 )}
+
                 <table>
                     <thead>
                         <tr>
@@ -155,6 +121,7 @@ const AdminDashboard = () => {
                     </tbody>
                 </table>
             </section>
+
             <section className="section">
                 <h2>Adoption Requests</h2>
                 <table>
@@ -175,10 +142,7 @@ const AdminDashboard = () => {
                                     <td>{request.phone}</td>
                                     <td>{request.reason}</td>
                                     <td>
-                                        <select
-                                            value={request.status}
-                                            onChange={(e) => handleStatusChange(request.id, e.target.value)}
-                                        >
+                                        <select value={request.status}>
                                             <option value="Pending">Pending</option>
                                             <option value="Approved">Approved</option>
                                             <option value="Rejected">Rejected</option>
