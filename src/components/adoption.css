@@ -213,3 +213,39 @@
     padding: 15px; /* Reduce padding further */
   }
 }
+/* Adoption Status Container */
+.adoption-status {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  color: black;
+}
+
+/* Success status */
+.adoption-status.success {
+  background-color: #dff0d8;
+  color: #4caf50;
+  border: 1px solid #4caf50;
+}
+
+/* Pending status */
+.adoption-status.pending {
+  background-color: #fff3cd;
+  color: #ff9800;
+  border: 1px solid #ff9800;
+}
+
+/* Failed status */
+.adoption-status.failed {
+  background-color: #f8d7da;
+  color: #f44336;
+  border: 1px solid #f44336;
+}

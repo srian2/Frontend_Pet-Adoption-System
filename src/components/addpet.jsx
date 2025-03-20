@@ -73,26 +73,27 @@ const AddPet = () => {
       alert("Error: Could not save pet.");
     }
   };
-
   const handleDelete = async () => {
     try {
-      const response = await fetch(`${API_URL}/delete`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+        console.log("📌 Sending delete request with:", formData);
 
-      if (!response.ok) throw new Error("Failed to delete pet");
+        const response = await fetch(`${API_URL}/delete`, {  // ✅ Ensure the correct endpoint
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+        });
 
-      alert("Pet deleted successfully!");
-      setPets((prev) => prev.filter((pet) => pet.name !== formData.name));
-      setFormData({ name: "", species: "", age: "", breed: "", description: "" });
+        if (!response.ok) throw new Error("❌ Failed to delete pet");
+
+        alert("✅ Pet deleted successfully!");
+
+        setPets((prev) => prev.filter((pet) => pet.name !== formData.name));
+        setFormData({ name: "", species: "", age: "", breed: "", description: "" });
     } catch (error) {
-      console.error("Error deleting pet:", error);
-      alert("Error: Could not delete pet.");
+        console.error("❌ Error deleting pet:", error);
+        alert("❌ Could not delete pet.");
     }
-  };
-
+};
   return (
     <div className="profile-page">
       {/* Sidebar */}

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
@@ -7,17 +6,17 @@ const AdminDashboard = () => {
     const [pets, setPets] = useState([]);
     const [adoptions, setAdoptions] = useState([]);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    
     const [newPet, setNewPet] = useState({
         name: "",
         species: "",
         age: "",
         breed: "",
         description: "",
-        image: null
+        imageUrl: ""
     });
 
-    const navigate = useNavigate();
-
+    // Fetch data from API
     useEffect(() => {
         fetch("http://localhost:3000/api/auth/getAllUsers")
             .then(response => response.json())
@@ -35,24 +34,81 @@ const AdminDashboard = () => {
             .catch(error => console.error("Error fetching adoptions:", error));
     }, []);
 
-    const handleLogout = () => {
-        localStorage.removeItem("token");  // Remove auth token
-        navigate("/login"); // Redirect to login page
+    // Handle status change in adoption requests
+    const handleStatusChange = (adoptionId, newStatus) => {
+        fetch(`http://localhost:3000/api/adoptions/updateStatus/${adoptionId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: newStatus }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          setAdoptions(prevAdoptions =>
+            prevAdoptions.map(adoption =>
+              adoption.id === adoptionId ? { ...adoption, status: newStatus } : adoption
+            )
+          );
+          localStorage.setItem("adoptionStatus", newStatus); // Update localStorage
+        })
+        .catch(error => console.error("Error updating status:", error));
+      };
+      
+
+    // Handle input change for adding a pet
+    const handleInputChange = (e) => {
+        setNewPet({ ...newPet, [e.target.name]: e.target.value });
     };
+
+    // Handle form submission for adding a pet
+    const handleAddPet = async (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        Object.keys(newPet).forEach((key) => {
+            if (key !== "image") {
+                formData.append(key, newPet[key]);
+            }
+        });
+    
+        if (newPet.image) {
+            formData.append("image", newPet.image); // Append file
+        }
+    
+        try {
+            const response = await fetch("http://localhost:3000/api/pets/", {
+                method: "POST",
+                body: formData, // Use FormData
+            });
+    
+            if (!response.ok) throw new Error("Failed to add pet");
+    
+            const data = await response.json();
+            setPets([...pets, data]); // Update state with new pet
+            setNewPet({ name: "", species: "", age: "", breed: "", description: "", image: null });
+            setIsPopupOpen(false);
+        } catch (error) {
+            console.error("Error adding pet:", error);
+        }
+    };
+    
+    const handleFileChange = (e) => {
+        setNewPet({ ...newPet, image: e.target.files[0] }); // Store file separately
+    };
+    
+    
+    
 
     return (
         <div className="container">
-            <div className="dashboard-header">
-                <h1>Admin Dashboard</h1>
-                <button className="logout-btn" onClick={handleLogout}>Logout</button>
-            </div>
-            
+            <h1>Admin Dashboard</h1>
+
+            {/* Users Section */}
             <section className="section">
                 <h2>Users</h2>
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th><th>Full Name</th><th>Email</th><th>DOB</th><th>Photo</th><th>Address</th><th>Phone</th>
+                            <th>ID</th><th>Full Name</th><th>Email</th>
+                            <th>DOB</th><th>Photo</th><th>Address</th><th>Phone Number</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -75,21 +131,25 @@ const AdminDashboard = () => {
                 </table>
             </section>
 
+            {/* Pets Section */}
             <section className="section">
                 <h2>Pets</h2>
+
+                {/* Add Pet Button */}
                 <button className="add-pet-btn" onClick={() => setIsPopupOpen(true)}>Add Pet</button>
-                
+
+                {/* Add Pet Popup */}
                 {isPopupOpen && (
                     <div className="popup">
                         <div className="popup-content">
                             <h2>Add a New Pet</h2>
-                            <form>
-                                <input type="text" name="name" placeholder="Pet Name" required />
-                                <input type="text" name="species" placeholder="Species" required />
-                                <input type="number" name="age" placeholder="Age" required />
-                                <input type="text" name="breed" placeholder="Breed" required />
-                                <input type="text" name="description" placeholder="Description" required />
-                                <input type="file" name="image" accept="image/*" required />
+                            <form onSubmit={handleAddPet} className="add-pet-form">
+                                <input type="text" name="name" value={newPet.name} onChange={handleInputChange} placeholder="Pet Name" required />
+                                <input type="text" name="species" value={newPet.species} onChange={handleInputChange} placeholder="Species" required />
+                                <input type="number" name="age" value={newPet.age} onChange={handleInputChange} placeholder="Age" required />
+                                <input type="text" name="breed" value={newPet.breed} onChange={handleInputChange} placeholder="Breed" required />
+                                <input type="text" name="description" value={newPet.description} onChange={handleInputChange} placeholder="Description" required />
+                                <input type="file" accept="image/*" onChange={handleFileChange} required />
                                 <button type="submit">Add Pet</button>
                                 <button type="button" className="close-btn" onClick={() => setIsPopupOpen(false)}>Cancel</button>
                             </form>
@@ -97,10 +157,12 @@ const AdminDashboard = () => {
                     </div>
                 )}
 
+                {/* Pets Table */}
                 <table>
                     <thead>
                         <tr>
-                            <th>Name</th><th>Species</th><th>Age</th><th>Breed</th><th>Description</th><th>Image</th>
+                            <th>Name</th><th>Species</th><th>Age</th><th>Breed</th>
+                            <th>Description</th><th>Image</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -112,7 +174,13 @@ const AdminDashboard = () => {
                                     <td>{pet.age}</td>
                                     <td>{pet.breed}</td>
                                     <td>{pet.description}</td>
-                                    <td><img src={pet.imageUrl} alt="Pet" width="50" /></td>
+                                    <td>
+                                        {pet.imageUrl ? (
+                                            <img src={`http://localhost:3000/uploads/${pet.imageUrl}`} alt="Pet" width="50" />
+                                        ) : (
+                                            "No Image"
+                                        )}
+                                    </td>
                                 </tr>
                             ))
                         ) : (
@@ -122,6 +190,7 @@ const AdminDashboard = () => {
                 </table>
             </section>
 
+            {/* Adoption Requests Section */}
             <section className="section">
                 <h2>Adoption Requests</h2>
                 <table>
@@ -142,7 +211,10 @@ const AdminDashboard = () => {
                                     <td>{request.phone}</td>
                                     <td>{request.reason}</td>
                                     <td>
-                                        <select value={request.status}>
+                                        <select
+                                            value={request.status}
+                                            onChange={(e) => handleStatusChange(request.id, e.target.value)}
+                                        >
                                             <option value="Pending">Pending</option>
                                             <option value="Approved">Approved</option>
                                             <option value="Rejected">Rejected</option>

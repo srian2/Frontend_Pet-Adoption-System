@@ -28,6 +28,8 @@ function Login() {
       if (response.ok) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("role", data.role); 
+
+        localStorage.setItem("userId", data.userId); 
         alert("✅ Login successful! Redirecting...");
         setTimeout(() => {
           if (data.role === "admin") {

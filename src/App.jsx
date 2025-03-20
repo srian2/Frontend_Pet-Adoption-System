@@ -10,7 +10,7 @@ import AdminDashboard from "./components/AdminDashboard";
 
 
 const AppLayout = () => {
-  const location = useLocation(); 
+  const location = useLocation();
 
 
 

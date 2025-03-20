@@ -212,5 +212,26 @@
 .profile-picture-container input[type="file"]::-webkit-file-upload-button:hover {
   background: #003080;
 }
+.message {
+  color: black;  /* Sets text color to black */
+  font-size: 16px; /* Adjusts text size */
+  font-weight: bold; /* Makes the text bold */
+  text-align: center; /* Centers the text */
+  padding: 10px; /* Adds spacing around the text */
+}
+input[type="date"] {
+  background-color:white(245, 239, 239);  /* Black background */
+  color:black;  /* White text for better visibility */
+  border: 1px solid rgb(98, 92, 92);  /* White border */
+  padding: 8px;
+  border-radius: 5px;
+  outline: none;
+  
+}
+
+/* Styling the calendar popup */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1); /* Makes the calendar icon white */
+}
 
 

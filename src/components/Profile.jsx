@@ -13,11 +13,12 @@ const Profile = () => {
 
   const [preview, setPreview] = useState(null);
   const [message, setMessage] = useState("");
+  const userID=  localStorage.getItem("userId");
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/auth/get-user-profile/1`);
+        const response = await fetch(`http://localhost:3000/api/auth/get-user-profile/${userID}`);
 
         if (!response.ok) {
           throw new Error("Failed to fetch profile");
@@ -43,55 +44,67 @@ const Profile = () => {
   }, []);
 
   const handleChange = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
-  };
+    setUser((prevUser) => ({
+        ...prevUser,
+        [e.target.name]: e.target.value
+    }));
+};
 
-  const handleFileChange = (e) => {
+const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setUser({ ...user, profileImage: file });
 
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result);
-      reader.readAsDataURL(file);
+        setUser((prevUser) => ({
+            ...prevUser,
+            profileImage: file
+        }));
+
+        const reader = new FileReader();
+        reader.onloadend = () => setPreview(reader.result);
+        reader.readAsDataURL(file);
     }
-  };
+};
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("Fullname", user.fullname);
-    formData.append("dob", user.dob);
-    formData.append("phoneNumber", user.phone);
-    formData.append("Email", user.email);
-    formData.append("address", user.address);
+  const formData = new FormData();
+  formData.append("Fullname", user.fullname);
+  formData.append("dob", user.dob);
+  formData.append("phoneNumber", user.phone);
+  formData.append("Email", user.email);
+  formData.append("address", user.address);
 
-    if (user.profileImage && user.profileImage instanceof File) {
+  if (user.profileImage instanceof File) {
       formData.append("profileImage", user.profileImage);
-    }
-    try {
-      const response = await fetch("http://localhost:3000/api/auth/update-profile/1", {
-        method: "PUT",
-        body: formData,
+  }
+
+  try {
+      const response = await fetch("http://localhost:3000/api/auth/update-profile/8", {
+          method: "PUT",
+          body: formData,
       });
+
       const data = await response.json();
       console.log("Update Response:", data);
+
       if (response.ok) {
-        setMessage("✅ Profile updated successfully!");
-        setUser((prevUser) => ({
-          ...prevUser,
-          profileImage: data.user?.photo || prevUser.profileImage,
-        }));
-        setPreview(data.user?.photo || prevUser.profileImage);
+          setMessage("✅ Profile updated successfully!");
+
+          setUser((prevUser) => ({
+              ...prevUser, // ✅ Fix: Using previous state correctly
+              profileImage: data.user?.photo || prevUser.profileImage,
+          }));
+
+          setPreview(data.user?.photo || user.profileImage); // ✅ Ensures preview updates correctly
       } else {
-        setMessage(`❌ ${data.error || "Update failed!"}`);
+          setMessage(`❌ ${data.error || "Update failed!"}`);
       }
-    } catch (error) {
+  } catch (error) {
       setMessage("❌ Server error. Please try again later.");
       console.error("Error updating profile:", error);
-    }
-  };
+  }
+};
 
   return (
     <div className="profile">
@@ -116,7 +129,7 @@ const Profile = () => {
             className="profile-image"
           />
           <input type="file" accept="image/*" onChange={handleFileChange} />
-        </div> 
+        </div>
         {/* Profile Details Form */}
         <form className="profile-form" onSubmit={handleSubmit}>
           <label>Name</label>
